@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Images to perl pictures</title>
+    <script src="jquery/jquery-1.12.3.min.js" ></script>
+    <script src="bootstrap/js/bootstrap.min.js" ></script>
+    <script src="pictures.js" ></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+</head>
+<body style="padding-top: 60px">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><alpha href="#">Generate Perl Image </alpha></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<section id="program">
+    <div class="container">
+        <div class="rows">
+            <div class="col-lg-6 col-sm-12">
+                <div class="thumbnail">
+                    <img id="previewPicture" src="no-image.png" alt="preview picture" style="max-width: 200px">
+                    <div class="caption">
+                        <h3>insert link to picture</h3>
+                        <input id="link" type="text" value="http://localhost:8080/tmp/manaBeast.gif"> <!-- ...url to picture... -->
+                        <div>
+                            <alpha href="#" id="BNTtoHamaColor" class="btn btn-primary" role="button">Switch To Hama Color</alpha>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <div class="thumbnail">
+                    <canvas id="resultPicture" width="512" height="512"></canvas>
+                    <div class="caption">
+                        <h3>Result</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
