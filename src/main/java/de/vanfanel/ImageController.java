@@ -5,13 +5,17 @@ import de.vanfanel.exceptions.HTTPNotFoundException;
 import de.vanfanel.request.ImageRequest;
 import de.vanfanel.response.ImageData;
 import de.vanfanel.response.ImageResponse;
+import de.vanfanel.utils.BeadsColorUtils;
 import static de.vanfanel.utils.BeadsColorUtils.getIntFromColor;
 import static de.vanfanel.utils.BeadsColorUtils.getNearestColor;
+import de.vanfanel.utils.Dimension;
 import de.vanfanel.utils.HTTPUtils;
+import de.vanfanel.utils.ImageResizeUtils;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import org.apache.commons.lang3.StringUtils;
@@ -38,9 +42,14 @@ public class ImageController {
       BufferedImage img = ImageIO.read(new URL(request.getLink()));
       ImageResponse response = new ImageResponse();
 
-      response.getImages().add(getImageData(img));
+      List<Dimension> dimensionList = BeadsColorUtils.calculateDimensionToScale(new Dimension(img.getWidth(), img.getHeight()));
 
-      System.out.println(response);
+      dimensionList.parallelStream().map(
+          d -> ImageResizeUtils.resizeImageWithThumbnailMaker(img,d.getWidth(),d.getHeight())
+      ).forEachOrdered(
+          i -> response.getImages().add(getImageData(i))
+      );
+
       return response;
 
     } catch (IOException e) {
