@@ -1,6 +1,6 @@
-package de.vanfanel;
+package de.vanfanel.response;
 
-public class ImageResponse {
+public class ImageData {
 
   private String imgBase64 = "";
 
@@ -10,7 +10,7 @@ public class ImageResponse {
 
   private int[] pixelValues;
 
-  public ImageResponse() {
+  public ImageData() {
   }
 
   public String getImgBase64() {
@@ -44,5 +44,4 @@ public class ImageResponse {
   public void setPixelValues(int[] pixelValues) {
     this.pixelValues = pixelValues;
   }
-
 }

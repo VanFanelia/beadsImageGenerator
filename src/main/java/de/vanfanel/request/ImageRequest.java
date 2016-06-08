@@ -1,4 +1,4 @@
-package de.vanfanel;
+package de.vanfanel.request;
 
 public class ImageRequest {
 

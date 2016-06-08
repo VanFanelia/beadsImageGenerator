@@ -2,6 +2,9 @@ package de.vanfanel;
 
 
 import de.vanfanel.exceptions.HTTPNotFoundException;
+import de.vanfanel.request.ImageRequest;
+import de.vanfanel.response.ImageData;
+import de.vanfanel.response.ImageResponse;
 import static de.vanfanel.utils.BeadsColorUtils.getIntFromColor;
 import static de.vanfanel.utils.BeadsColorUtils.getNearestColor;
 import de.vanfanel.utils.HTTPUtils;
@@ -24,7 +27,8 @@ import sun.misc.BASE64Encoder;
 public class ImageController {
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public @ResponseBody ImageResponse process(@RequestBody ImageRequest request) throws HTTPNotFoundException
+  public @ResponseBody
+  ImageResponse process(@RequestBody ImageRequest request) throws HTTPNotFoundException
   {
     if(StringUtils.defaultIfEmpty(request.getLink(),"").isEmpty() || ! HTTPUtils.checkURLIsImage(request.getLink())){
       throw new HTTPNotFoundException();
@@ -34,8 +38,7 @@ public class ImageController {
       BufferedImage img = ImageIO.read(new URL(request.getLink()));
       ImageResponse response = new ImageResponse();
 
-      fillResponseWithImgData(response, img);
-
+      response.getImages().add(getImageData(img));
 
       System.out.println(response);
       return response;
@@ -47,12 +50,13 @@ public class ImageController {
 
   }
 
-  private void fillResponseWithImgData(ImageResponse response, BufferedImage img) {
+  private ImageData getImageData(BufferedImage img) {
     int height = img.getHeight();
     int width = img.getWidth();
 
-    response.setHeight(height);
-    response.setWidth(width);
+    ImageData result = new ImageData();
+    result.setHeight(height);
+    result.setWidth(width);
 
     System.out.println("height: "+height+"width" +width);
 
@@ -66,10 +70,11 @@ public class ImageController {
       base64Image.setRGB(x,y,imagePixelValues[i]);
     });
 
-    response.setPixelValues(imagePixelValues);
+    result.setPixelValues(imagePixelValues);
 
-    response.setImgBase64(convertToBase64(base64Image));
+    result.setImgBase64(convertToBase64(base64Image));
 
+    return result;
   }
 
   public static String convertToBase64(BufferedImage img){
