@@ -94,6 +94,19 @@ public class BeadsColorUtilsTest {
     assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(36));
     assertThat(targetDimensions.get(2).getWidth(), Matchers.equalTo(18));
     assertThat(targetDimensions.get(2).getHeight(), Matchers.equalTo(18));
+  }
 
+  @Test
+  public void testCalculateDimensionToScaleReturnsListWithMultiDimensionOnDimensionWithDifferentHeightAndWidth() throws Exception {
+    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(448,502)); // 145+1
+    assertThat(targetDimensions.size(), Matchers.equalTo(4));
+    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(112));
+    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(125));
+    assertThat(targetDimensions.get(1).getWidth(), Matchers.equalTo(56));
+    assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(62));
+    assertThat(targetDimensions.get(2).getWidth(), Matchers.equalTo(28));
+    assertThat(targetDimensions.get(2).getHeight(), Matchers.equalTo(31));
+    assertThat(targetDimensions.get(3).getWidth(), Matchers.equalTo(14));
+    assertThat(targetDimensions.get(3).getHeight(), Matchers.equalTo(15));
   }
 }

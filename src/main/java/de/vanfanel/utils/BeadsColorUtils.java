@@ -116,7 +116,7 @@ public class BeadsColorUtils {
       results.add(currentDimension.clone());
     }
 
-    while( currentDimension.getWidth() > MIN_RESIZE_VALUE.getWidth() &&
+    while( currentDimension.getWidth() > MIN_RESIZE_VALUE.getWidth() ||
         currentDimension.getHeight() > MIN_RESIZE_VALUE.getHeight() )
     {
       currentDimension = new Dimension(currentDimension.getWidth() / 2, currentDimension.getHeight() / 2);
