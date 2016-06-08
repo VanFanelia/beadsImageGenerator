@@ -1,5 +1,6 @@
 package de.vanfanel.utils;
 
+import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -63,5 +64,36 @@ public class BeadsColorUtilsTest {
     System.out.println(yellow);
     Color colorFromInt = BeadsColorUtils.getColorFromInt(yellow);
     assertThat(hamaYellow, Matchers.equalTo(colorFromInt));
+  }
+
+  @Test
+  public void testCalculateDimensionToScaleReturnsSameDimensionIfDimensionIsBelow29x29pixels() throws Exception {
+    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(29,29));
+    assertThat(targetDimensions.size(), Matchers.equalTo(1));
+    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(29));
+    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(29));
+  }
+
+  @Test
+  public void testCalculateDimensionToScaleReturnsListWith2DimensionOnDimensionWithMoreThen29x29pixels() throws Exception {
+    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(30,30));
+    assertThat(targetDimensions.size(), Matchers.equalTo(2));
+    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(30));
+    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(30));
+    assertThat(targetDimensions.get(1).getWidth(), Matchers.equalTo(15));
+    assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(15));
+  }
+
+  @Test
+  public void testCalculateDimensionToScaleReturnsListWithMultiDimensionOnDimensionMoreThenMaxSize() throws Exception {
+    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(5*29+1,5*29+1)); // 145+1
+    assertThat(targetDimensions.size(), Matchers.equalTo(3));
+    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(73));
+    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(73));
+    assertThat(targetDimensions.get(1).getWidth(), Matchers.equalTo(36));
+    assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(36));
+    assertThat(targetDimensions.get(2).getWidth(), Matchers.equalTo(18));
+    assertThat(targetDimensions.get(2).getHeight(), Matchers.equalTo(18));
+
   }
 }

@@ -9,6 +9,9 @@ public class BeadsColorUtils {
 
   public static final List<HAMAColor> HAMA_BEADS_COLORS = new ArrayList<>();
 
+  public static final Dimension MAX_SIZE = new Dimension(5*29,5*29);
+  public static final Dimension MIN_RESIZE_VALUE = new Dimension(29,29);
+
   static{
 
     HAMA_BEADS_COLORS.add(new HAMAColor("H01", "WHITE", 255, 255, 255, 1));
@@ -105,4 +108,24 @@ public class BeadsColorUtils {
 
   }
 
+  public static List<Dimension> calculateDimensionToScale(Dimension start) {
+    List<Dimension> results = new ArrayList<>();
+    Dimension currentDimension = start;
+
+    if(currentDimension.getWidth() < MAX_SIZE.getWidth() && currentDimension.getHeight() < MAX_SIZE.getHeight()){
+      results.add(currentDimension.clone());
+    }
+
+    while( currentDimension.getWidth() > MIN_RESIZE_VALUE.getWidth() &&
+        currentDimension.getHeight() > MIN_RESIZE_VALUE.getHeight() )
+    {
+      currentDimension = new Dimension(currentDimension.getWidth() / 2, currentDimension.getHeight() / 2);
+
+      if(currentDimension.getWidth() < MAX_SIZE.getWidth() && currentDimension.getHeight() < MAX_SIZE.getHeight()){
+        results.add(currentDimension.clone());
+      }
+    }
+
+    return results;
+  }
 }
