@@ -24,14 +24,17 @@ $("document").ready(function() {
             success: function(data){
                 console.log( data );
 
+                var image = data.images[0];
+
+
                 var context = document.getElementById("resultPicture").getContext('2d');
                 var imageObj = new Image();
-                imageObj.src = "data:image/png;base64," + data.imgBase64;
+                imageObj.src = "data:image/png;base64," + image.imgBase64;
 
                 imageObj.onload = function() {
                     context.fillStyle="#FFFFFF";
                     context.fillRect(0,0,1000,1000);
-                    context.drawImage(imageObj, 0,0, data.width, data.height);
+                    context.drawImage(imageObj, 0,0, image.width, image.height);
                 };
             }
         });
