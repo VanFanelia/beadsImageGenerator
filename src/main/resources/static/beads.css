@@ -1,0 +1,9 @@
+#results div{
+    min-height: 200px;
+}
+
+a.thumbnail {
+    display: block;
+    margin: 10px auto;
+    max-width: 200px;
+}

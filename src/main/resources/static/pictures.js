@@ -5,14 +5,6 @@ $("document").ready(function() {
 
     var linkVal = link.val();
 
-    var context = document.getElementById("resultPicture").getContext('2d');
-    var imageObj = new Image();
-    imageObj.src = "http://localhost:8080/no-image.png";
-
-    imageObj.onload = function() {
-        context.drawImage(imageObj, 0,0, 512, 512);
-    };
-
     $("#BNTtoHamaColor").click(function(){
 
         $.ajax({
@@ -24,27 +16,80 @@ $("document").ready(function() {
             success: function(data){
                 console.log( data );
 
-                var image = data.images[0];
+                $("#results div").remove();
+                // create preview Images
+                for(var i=0; i<data.images.length; i++){
+                    $("#results").append(
+                        $("<div>").addClass("col-md-6 cool-xs-12").append(
+                           createImage(data.images[i].imgBase64)
+                        )).data("img",data.images[i]);
+                }
 
+                // create Result Images
+                for(var j=0; j<data.images.length; j++){
+                    var tableContainer = $("<div>").addClass("col-md-6 cool-xs-12").append(
+                        '<h2>Beads Pattern Details:</h2>'
+                    );
+                    $("#detailsTables").append(tableContainer);
 
-                var context = document.getElementById("resultPicture").getContext('2d');
-                var imageObj = new Image();
-                imageObj.src = "data:image/png;base64," + image.imgBase64;
+                    tableContainer.data("img",data.images[j]);
+                    drawCanvasTo(tableContainer, data.images[j], j);
+                }
 
-                imageObj.onload = function() {
-                    context.fillStyle="#FFFFFF";
-                    context.fillRect(0,0,1000,1000);
-                    context.drawImage(imageObj, 0,0, image.width, image.height);
-                };
+                $("#results div a.thumbnail").click(function(){
+
+                });
             }
         });
     });
+
+    function createImage(imgBase64)
+    {
+        return '<a href="#" class="thumbnail"><img src="data:image/png;base64,'+imgBase64+'"></a>';
+    }
+
+    function drawCanvasTo(nodeToDraw, imgData, nr)
+    {
+        var canvas = nodeToDraw.append('<canvas id="beadsTable'+nr+'" class="beadsCanvas"/>').find('canvas');
+        canvas.attr("width", imgData.width * 5);
+        canvas.attr("height", imgData.height * 5);
+        var context = canvas[0].getContext('2d');
+
+        context.strokeStyle = "#ff0000";
+        context.fillStyle="#FFFFFF";
+        context.fillRect(0,0,imgData.width * 5, imgData.height * 5);
+        for(var y=0; y < imgData.height; y++){
+            for(var x=0; x < imgData.width; x++){
+
+                var strokeColor = imgData.pixelValues[x*imgData.height+y];
+                var colorRGBA = int2rgba(strokeColor);
+                if(colorRGBA[3] < 1)
+                {
+                    continue;
+                }
+
+                context.beginPath();
+                context.arc(x*5,y*5,2,0,2*Math.PI);
+
+                var colorHex = "#"+colorRGBA[0].toString(16) +
+                    colorRGBA[1].toString(16) +
+                    colorRGBA[2].toString(16);
+
+                context.strokeStyle= colorHex;
+                context.stroke();
+            }
+        }
+    };
+
+
+
+
 
 });
 
 
 function changePreviewImage() {
-    $("#previewPicture").attr("src", $("#link").val());
+    $("#linkPreviewPicture").attr("src", $("#link").val());
 }
 
 
