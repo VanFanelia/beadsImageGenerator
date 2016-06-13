@@ -51,13 +51,15 @@ $("document").ready(function() {
     function drawCanvasTo(nodeToDraw, imgData, nr)
     {
         var canvas = nodeToDraw.append('<canvas id="beadsTable'+nr+'" class="beadsCanvas"/>').find('canvas');
-        canvas.attr("width", imgData.width * 5);
-        canvas.attr("height", imgData.height * 5);
+        var imgHeight = imgData.height * 5 + 10;
+        var imgWidth = imgData.width * 5 + 10;
+        canvas.attr("width", imgWidth);
+        canvas.attr("height", imgHeight);
         var context = canvas[0].getContext('2d');
 
         context.strokeStyle = "#ff0000";
         context.fillStyle="#FFFFFF";
-        context.fillRect(0,0,imgData.width * 5, imgData.height * 5);
+        context.fillRect(0,0,imgWidth, imgHeight);
         for(var y=0; y < imgData.height; y++){
             for(var x=0; x < imgData.width; x++){
 
@@ -69,7 +71,7 @@ $("document").ready(function() {
                 }
 
                 context.beginPath();
-                context.arc(x*5,y*5,2,0,2*Math.PI);
+                context.arc(x*5+5,y*5+5,2,0,2*Math.PI);
 
                 var colorHex = "#"+colorRGBA[0].toString(16) +
                     colorRGBA[1].toString(16) +
