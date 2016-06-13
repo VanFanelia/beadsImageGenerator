@@ -32,34 +32,34 @@ public class BeadsColorUtilsTest {
   @Test
   public void testGetNearestColorReturnsBlackForBlackColor() throws Exception {
     int black = 587202560;
-    HAMAColor blackColor = new HAMAColor("H18","BLACK",0,0,0,1);
+    HAMAColor blackColor = new HAMAColor("H18","BLACK",0,0,0,255);
     assertThat(BeadsColorUtils.getNearestColor(black), Matchers.equalTo(blackColor));
   }
 
   @Test
   public void testGetNearestColorReturnsBlackForBlackColorWithSomeRed() throws Exception {
     int blackWithSomeRed = (1 << 24)  + (16 << 16) + (0 << 8) + 0;
-    HAMAColor blackColor = new HAMAColor("H18","BLACK",0,0,0,1);
+    HAMAColor blackColor = new HAMAColor("H18","BLACK",0,0,0,255);
     assertThat(BeadsColorUtils.getNearestColor(blackWithSomeRed), Matchers.equalTo(blackColor));
   }
 
   @Test
   public void testGetNearestColorReturnsRedForRedColor() throws Exception {
     int rgbFullRed = (1 << 24)  + (255 << 16) + (0 << 8) + 0;
-    HAMAColor red = new HAMAColor("H05", "RED", 182, 49, 54, 1);
+    HAMAColor red = new HAMAColor("H05", "RED", 182, 49, 54, 255);
     assertThat(BeadsColorUtils.getNearestColor(rgbFullRed), Matchers.equalTo(red));
   }
 
   @Test
   public void testGetNearestColorReturnsYellowForYellowDColor() throws Exception {
     int yellowRGB = (1 << 24)  + (255 << 16) + (255 << 8) + 0;
-    HAMAColor hamaYellow = new HAMAColor("H03", "YELLOW", 255, 215, 90, 1);
+    HAMAColor hamaYellow = new HAMAColor("H03", "YELLOW", 255, 215, 90, 255);
     assertThat(BeadsColorUtils.getNearestColor(yellowRGB), Matchers.equalTo(hamaYellow));
   }
 
   @Test
   public void testColorConvertion() throws Exception {
-    Color hamaYellow = new Color(255, 215, 90, 1);
+    Color hamaYellow = new Color(255, 215, 90, 255);
     int yellow = BeadsColorUtils.getIntFromColor(hamaYellow);
     System.out.println(yellow);
     Color colorFromInt = BeadsColorUtils.getColorFromInt(yellow);

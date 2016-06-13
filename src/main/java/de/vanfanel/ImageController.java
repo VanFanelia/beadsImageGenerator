@@ -70,7 +70,7 @@ public class ImageController {
     System.out.println("height: "+height+"width" +width);
 
     int[] imagePixelValues = new int[width*height];
-    BufferedImage base64Image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+    BufferedImage base64Image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 
     IntStream.range(0, height*width).parallel().forEach(i -> {
       int x = (int) Math.floor(i / height);
