@@ -54,10 +54,15 @@ public class BeadsColorUtils {
 
   public static int getIntFromColor(Color color)
   {
-    return (color.getAlpha() << 24)
-        | (color.getRed() << 16)
-        | (color.getGreen() << 8)
-        | (color.getBlue());
+    return getIntFromColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+  }
+
+  public static int getIntFromColor(int red, int green, int blue, int alpha)
+  {
+    return (alpha << 24)
+        | (red << 16)
+        | (green << 8)
+        | (blue);
   }
 
   public static Color getColorFromInt(int color)

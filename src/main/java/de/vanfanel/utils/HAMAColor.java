@@ -1,5 +1,6 @@
 package de.vanfanel.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -40,6 +41,7 @@ public class HAMAColor extends Color{
     this.name = name;
   }
 
+  @JsonIgnore
   public HAMAColor getThisObj()
   {
     return this;

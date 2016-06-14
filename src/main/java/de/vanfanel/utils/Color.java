@@ -1,5 +1,6 @@
 package de.vanfanel.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,6 +15,8 @@ public class Color {
 
   private int alpha;
 
+  private int intValue;
+
   public Color() {
   }
 
@@ -22,6 +25,15 @@ public class Color {
     this.green = green;
     this.blue = blue;
     this.alpha = alpha;
+    this.intValue = BeadsColorUtils.getIntFromColor(red, green, blue, alpha);
+  }
+
+  public Color(int red, int green, int blue, int alpha, int intValue) {
+    this.red = red;
+    this.green = green;
+    this.blue = blue;
+    this.alpha = alpha;
+    this.intValue = intValue;
   }
 
   public int getRed() {
@@ -56,9 +68,18 @@ public class Color {
     this.alpha = alpha;
   }
 
+  @JsonIgnore
   public Color getThisObj()
   {
     return this;
+  }
+
+  public int getIntValue() {
+    return intValue;
+  }
+
+  public void setIntValue(int intValue) {
+    this.intValue = intValue;
   }
 
   @Override

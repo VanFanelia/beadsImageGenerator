@@ -50,6 +50,9 @@ public class ImageController {
           i -> response.getImages().add(getImageData(i))
       );
 
+      // Adds all know Colors
+      response.getKnownColors().addAll(BeadsColorUtils.HAMA_BEADS_COLORS);
+
       return response;
 
     } catch (IOException e) {

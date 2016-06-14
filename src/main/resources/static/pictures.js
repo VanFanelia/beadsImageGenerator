@@ -32,13 +32,24 @@ $("document").ready(function() {
                     var tableContainer = $('<div id="imgResult'+j+'" class="imgResult">').addClass("col-lg-12 col-md-12 cool-xs-12").append(
                         '<h2>Beads Pattern Details:</h2>'
                     );
+
                     if(j > 0){
                         tableContainer.addClass("hidden");
                     }
-                    $("#detailsTables").append(tableContainer);
 
                     tableContainer.data("img",data.images[j]);
-                    drawCanvasTo(tableContainer, data.images[j], j);
+
+                    var tableContainerRow = tableContainer.append('<div class="row">').find('div.row');
+                    var tableContainerCanvas = tableContainerRow.append('<div class="col-lg-6 col-md-12 canvas">').find('div.canvas');
+                    var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
+
+                    drawCanvasTo(tableContainerCanvas, data.images[j], j);
+                    printResultStatsTo(tableContainerStats, data.images[j], j );
+
+
+
+
+                    $("#detailsTables").append(tableContainer);
                 }
 
                 $("#results div a.thumbnail").click(function(event){
@@ -93,7 +104,11 @@ $("document").ready(function() {
         }
     };
 
-
+    function printResultStatsTo(nodeToPrint, imgData, nr)
+    {
+        var table = nodeToPrint.append('<table id="beadsStats'+nr+'" class="beadsStats"/>').find('table');
+        console.log(table);
+    }
 
 
 
