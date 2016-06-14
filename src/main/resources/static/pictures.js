@@ -19,33 +19,43 @@ $("document").ready(function() {
                 $("#results div").remove();
                 // create preview Images
                 for(var i=0; i<data.images.length; i++){
+                    data.images[i].nr = i;
                     $("#results").append(
-                        $("<div>").addClass("col-md-6 cool-xs-12").append(
-                           createImage(data.images[i].imgBase64)
+                        $("<div>").addClass("col-lg-3 col-md-6 cool-xs-12").append(
+                           createImage(data.images[i].imgBase64, i)
                         )).data("img",data.images[i]);
                 }
 
                 // create Result Images
-                for(var j=0; j<data.images.length; j++){
-                    var tableContainer = $("<div>").addClass("col-md-6 cool-xs-12").append(
+                $("#detailsTables").empty();
+                for(var j=0; j < data.images.length; j++){
+                    var tableContainer = $('<div id="imgResult'+j+'" class="imgResult">').addClass("col-lg-12 col-md-12 cool-xs-12").append(
                         '<h2>Beads Pattern Details:</h2>'
                     );
+                    if(j > 0){
+                        tableContainer.addClass("hidden");
+                    }
                     $("#detailsTables").append(tableContainer);
 
                     tableContainer.data("img",data.images[j]);
                     drawCanvasTo(tableContainer, data.images[j], j);
                 }
 
-                $("#results div a.thumbnail").click(function(){
-
+                $("#results div a.thumbnail").click(function(event){
+                    event.preventDefault();
+                    var nr = $(this).data("nr");
+                    console.log(nr);
+                    $(".imgResult").addClass("hidden");
+                    $("#imgResult" + nr).removeClass("hidden");
+                    return false;
                 });
             }
         });
     });
 
-    function createImage(imgBase64)
+    function createImage(imgBase64, nr)
     {
-        return '<a href="#" class="thumbnail"><img src="data:image/png;base64,'+imgBase64+'"></a>';
+        return '<a href="#" class="thumbnail" data-nr="'+nr+'"><img src="data:image/png;base64,'+imgBase64+'"></a>';
     }
 
     function drawCanvasTo(nodeToDraw, imgData, nr)
