@@ -44,7 +44,7 @@ $("document").ready(function() {
                     var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
 
                     drawCanvasTo(tableContainerCanvas, data.images[j], j);
-                    printResultStatsTo(tableContainerStats, data.images[j], j );
+                    printResultStatsTo(tableContainerStats, data.images[j], j, data.knownColors);
 
 
 
@@ -104,13 +104,39 @@ $("document").ready(function() {
         }
     };
 
-    function printResultStatsTo(nodeToPrint, imgData, nr)
+    function printResultStatsTo(nodeToPrint, imgData, nr, knownColors)
     {
         var table = nodeToPrint.append('<table id="beadsStats'+nr+'" class="beadsStats"/>').find('table');
-        console.log(table);
+        table.append('<tr><th>Id</th><th>Name</th><th>Color</th><th>#</th></tr>');
+        var stats = countBeads(imgData, knownColors)
+
+        console.log(stats);
+
+        $.each(knownColors, function(key, color){
+            if(stats[color.intValue] == 0)
+            {
+                // ignore transparent
+                return;
+            }
+            var node = '<tr><td>' + color.id + '</td><td>' + color.name + '</td><td>#' +
+                color.red.toString(16) + color.green.toString(16) + color.blue.toString(16) + '</td><td>' +
+                stats[color.intValue] + '</td></tr>';
+            table.append(node);
+        });
     }
 
+    function countBeads(imgData, knownColors){
+        var result = {0 : 0};
+        $.each(knownColors, function(key, color){
+            result[color.intValue] = 0;
+        });
 
+        $.each(imgData.pixelValues, function(key, intVal){
+            result[intVal] = result[intVal] +1;
+        });
+
+        return result;
+    }
 
 });
 
