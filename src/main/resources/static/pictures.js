@@ -5,6 +5,9 @@ $("document").ready(function() {
 
     var linkVal = link.val();
 
+    var knownColors;
+    var knownColorsSorted = {0 : "transparent"};
+
     $("#BNTtoHamaColor").click(function(){
 
         $.ajax({
@@ -15,6 +18,11 @@ $("document").ready(function() {
             dataType:"json",
             success: function(data){
                 console.log( data );
+
+                knownColors = data.knownColors;
+                $.each(knownColors, function(key, value){
+                    knownColorsSorted[value.intValue] = value;
+                });
 
                 $("#results div").remove();
                 // create preview Images
@@ -37,17 +45,15 @@ $("document").ready(function() {
                         tableContainer.addClass("hidden");
                     }
 
-                    tableContainer.data("img",data.images[j]);
-
                     var tableContainerRow = tableContainer.append('<div class="row">').find('div.row');
                     var tableContainerCanvas = tableContainerRow.append('<div class="col-lg-6 col-md-12 canvas">').find('div.canvas');
                     var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
 
-                    drawCanvasTo(tableContainerCanvas, data.images[j], j);
+                    var canvas = drawCanvasTo(tableContainerCanvas, data.images[j], j);
+                    $(canvas).data("img", data.images[j]);
+
                     printResultStatsTo(tableContainerStats, data.images[j], j, data.knownColors);
-
-
-
+                    initHoverInfoBox(canvas);
 
                     $("#detailsTables").append(tableContainer);
                 }
@@ -63,6 +69,8 @@ $("document").ready(function() {
             }
         });
     });
+
+    /** helper functions **/
 
     function createImage(imgBase64, nr)
     {
@@ -102,7 +110,8 @@ $("document").ready(function() {
                 context.stroke();
             }
         }
-    };
+        return canvas;
+    }
 
     function printResultStatsTo(nodeToPrint, imgData, nr, knownColors)
     {
@@ -136,6 +145,38 @@ $("document").ready(function() {
         });
 
         return result;
+    }
+
+    function initHoverInfoBox(canvas){
+        var infobox = $('#hoverInfoBox');
+        $(canvas).on('mousemove', function(e){
+            infobox.css({
+                left:  e.pageX,
+                top:   e.pageY
+            });
+            var x = Math.floor((e.offsetX - 5 ) / 5);
+            var y = Math.floor((e.offsetY - 5 ) / 5);
+            if(x < 0 || y < 0){
+                infobox.html("out of range");
+                return;
+            }
+            var imgData = canvas.data("img");
+            var intVal = imgData.pixelValues[x*imgData.height+y];
+            var color =  knownColorsSorted[intVal];
+            if( color == "transparent")
+            {
+                infobox.html("X: "+x+" Y: "+y + " no bead / transparent");
+                return;
+            }
+            var rgb = '#' + color.red.toString(16) + color.green.toString(16) + color.blue.toString(16);
+            infobox.html("X: "+x+" Y: "+y + "id: " + color.id + " name: " + color.name + " color: "+rgb);
+        });
+        $(canvas).on('mouseleave',function(e){
+            infobox.addClass("hidden");
+        });
+        $(canvas).on('mouseenter',function(e){
+            infobox.removeClass("hidden");
+        });
     }
 
 });
