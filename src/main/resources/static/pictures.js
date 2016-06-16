@@ -61,7 +61,6 @@ $("document").ready(function() {
                 $("#results div a.thumbnail").click(function(event){
                     event.preventDefault();
                     var nr = $(this).data("nr");
-                    console.log(nr);
                     $(".imgResult").addClass("hidden");
                     $("#imgResult" + nr).removeClass("hidden");
                     return false;
@@ -86,7 +85,6 @@ $("document").ready(function() {
         canvas.attr("height", imgHeight);
         var context = canvas[0].getContext('2d');
 
-        context.strokeStyle = "#ff0000";
         context.fillStyle="#FFFFFF";
         context.fillRect(0,0,imgWidth, imgHeight);
         for(var y=0; y < imgData.height; y++){
@@ -110,6 +108,16 @@ $("document").ready(function() {
                 context.stroke();
             }
         }
+
+        for(var xGrid=5-2; xGrid < imgWidth ; xGrid += 29*5)
+        {
+            for(var yGrid= 5-2; yGrid < imgHeight; yGrid += 29*5)
+            {
+                context.strokeStyle = "#000000";
+                context.strokeRect(xGrid,yGrid, 29*5, 29*5);
+            }
+        }
+
         return canvas;
     }
 
@@ -165,11 +173,11 @@ $("document").ready(function() {
             var color =  knownColorsSorted[intVal];
             if( color == "transparent")
             {
-                infobox.html("X: "+x+" Y: "+y + " no bead / transparent");
+                infobox.html("X: "+(x+1)+" Y: "+(y+1) + " no bead / transparent");
                 return;
             }
             var rgb = '#' + color.red.toString(16) + color.green.toString(16) + color.blue.toString(16);
-            infobox.html("X: "+x+" Y: "+y + "id: " + color.id + " name: " + color.name + " color: "+rgb);
+            infobox.html("X: "+(x+1)+" Y: "+(y+1) + "id: " + color.id + " name: " + color.name + " color: "+rgb);
         });
         $(canvas).on('mouseleave',function(e){
             infobox.addClass("hidden");
