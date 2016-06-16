@@ -3,12 +3,12 @@ $("document").ready(function() {
     link.change(function(){changePreviewImage();});
     link.blur(function(){changePreviewImage();});
 
-    var linkVal = link.val();
-
     var knownColors;
     var knownColorsSorted = {0 : "transparent"};
 
     $("#BNTtoHamaColor").click(function(){
+
+        var linkVal = link.val();
 
         $.ajax({
             url:"/process",
