@@ -37,31 +37,47 @@ $("document").ready(function() {
                 // create Result Images
                 $("#detailsTables").empty();
                 for(var j=0; j < data.images.length; j++){
-                    var tableContainer = $('<div id="imgResult'+j+'" class="imgResult">').addClass("col-lg-12 col-md-12 cool-xs-12").append(
-                        '<h2>Beads Pattern Details:</h2>'
-                    );
+                    var canvas = createCanvasWithTable(j, data.images[j], data.knownColors, "imgResult");
+                    initPanelFullSizeView(canvas);
 
-                    if(j > 0){
-                        tableContainer.addClass("hidden");
+                    var xPanels = Math.ceil(data.images[j].width / 29);
+                    var yPanels = Math.ceil(data.images[j].height / 29);
+
+                    for(var x=0; x < xPanels; x++){
+                        for(var y=0; y < yPanels; y++){
+                            var w = (x == xPanels-1) ? data.images[j].width % 29 : 29;
+                            var h = (y == yPanels-1) ? data.images[j].height % 29 : 29;
+                            var nr= x+"-"+y;
+                            var pixelValues = [];
+
+                            for(var xRect=0; xRect < w; xRect++){
+                                for(var yRect=0; yRect < h; yRect++){
+                                    //var pos = x*29 + xRect + (((y * 29) + yRect) * data.images[j].width);
+                                    var pos = y*29 + yRect + (((x * 29) + xRect) * data.images[j].height);
+                                    pixelValues.push(data.images[j].pixelValues[pos]);
+                                }
+                            }
+
+                            var dataRect = {
+                                "width": w,
+                                "height": h,
+                                "nr": nr,
+                                "pixelValues": pixelValues
+                            };
+                            var canvas = createCanvasWithTable(nr, dataRect, data.knownColors, "imgResult imgResultDetails")
+                        }
                     }
-
-                    var tableContainerRow = tableContainer.append('<div class="row">').find('div.row');
-                    var tableContainerCanvas = tableContainerRow.append('<div class="col-lg-6 col-md-12 canvas">').find('div.canvas');
-                    var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
-
-                    var canvas = drawCanvasTo(tableContainerCanvas, data.images[j], j);
-                    $(canvas).data("img", data.images[j]);
-
-                    printResultStatsTo(tableContainerStats, data.images[j], j, data.knownColors);
-                    initHoverInfoBox(canvas);
-
-                    $("#detailsTables").append(tableContainer);
                 }
+
+                // init visibility of result rows
+                var allResultRows = $(".imgResult");
+                allResultRows.addClass("hidden");
+                $("#imgResult0").removeClass("hidden");
 
                 $("#results div a.thumbnail").click(function(event){
                     event.preventDefault();
                     var nr = $(this).data("nr");
-                    $(".imgResult").addClass("hidden");
+                    allResultRows.addClass("hidden");
                     $("#imgResult" + nr).removeClass("hidden");
                     return true;
                 });
@@ -72,6 +88,28 @@ $("document").ready(function() {
     });
 
     /** helper functions **/
+    function createCanvasWithTable(j, imgData, knownColors, containerClass) {
+        var tableContainer = $('<div id="imgResult' + j + '" class="'+containerClass+'">').addClass("col-lg-12 col-md-12 cool-xs-12").append(
+            '<h2>Beads Pattern Details:</h2>'
+        );
+
+        if (j > 0) {
+            tableContainer.addClass("hidden");
+        }
+
+        var tableContainerRow = tableContainer.append('<div class="row">').find('div.row');
+        var tableContainerCanvas = tableContainerRow.append('<div class="col-lg-6 col-md-12 canvas">').find('div.canvas');
+        var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
+
+        var canvas = drawCanvasTo(tableContainerCanvas, imgData, j);
+        $(canvas).data("img", imgData);
+
+        printResultStatsTo(tableContainerStats, imgData, j, knownColors);
+        initHoverInfoBox(canvas);
+
+        $("#detailsTables").append(tableContainer);
+        return canvas;
+    }
 
     function createImage(imgBase64, nr)
     {
@@ -191,6 +229,20 @@ $("document").ready(function() {
         });
     }
 
+    function initPanelFullSizeView(canvas) {
+        $(canvas).on('click', function(e) {
+
+            var x = Math.floor(((e.offsetX - 5 ) / 5) / 29);
+            var y = Math.floor(((e.offsetY - 5 ) / 5) / 29);
+
+            console.log(x, y);
+
+            var allResultDetailsRows = $(".imgResultDetails");
+            allResultDetailsRows.addClass("hidden");
+            $("#imgResult"+x+"-"+y).removeClass("hidden");
+
+        });
+    }
 });
 
 

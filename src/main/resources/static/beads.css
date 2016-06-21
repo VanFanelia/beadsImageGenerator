@@ -8,8 +8,12 @@ a.thumbnail {
     max-width: 200px;
 }
 
-td, th {
+th {
     padding: 10px;
+}
+
+td {
+    padding: 2px;
 }
 
 #hoverInfoBox{
