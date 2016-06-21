@@ -16,6 +16,10 @@ td {
     padding: 2px;
 }
 
+canvas {
+    cursor: pointer;
+}
+
 #hoverInfoBox{
     position: absolute;
     border: 2px solid black;
