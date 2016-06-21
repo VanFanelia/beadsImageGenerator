@@ -63,8 +63,10 @@ $("document").ready(function() {
                     var nr = $(this).data("nr");
                     $(".imgResult").addClass("hidden");
                     $("#imgResult" + nr).removeClass("hidden");
-                    return false;
+                    return true;
                 });
+
+
             }
         });
     });
@@ -164,11 +166,13 @@ $("document").ready(function() {
             });
             var x = Math.floor((e.offsetX - 5 ) / 5);
             var y = Math.floor((e.offsetY - 5 ) / 5);
-            if(x < 0 || y < 0){
+            var imgData = canvas.data("img");
+
+            if(x < 0 || y < 0 || x >= imgData.width || y >= imgData.height){
                 infobox.html("out of range");
                 return;
             }
-            var imgData = canvas.data("img");
+
             var intVal = imgData.pixelValues[x*imgData.height+y];
             var color =  knownColorsSorted[intVal];
             if( color == "transparent")
