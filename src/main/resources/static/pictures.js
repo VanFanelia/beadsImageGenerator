@@ -47,7 +47,7 @@ $("document").ready(function() {
                         for(var y=0; y < yPanels; y++){
                             var w = (x == xPanels-1) ? data.images[j].width % 29 : 29;
                             var h = (y == yPanels-1) ? data.images[j].height % 29 : 29;
-                            var nr= x+"-"+y;
+                            var nr= j+"_"+x+"-"+y;
                             var pixelValues = [];
 
                             for(var xRect=0; xRect < w; xRect++){
@@ -234,12 +234,14 @@ $("document").ready(function() {
 
             var x = Math.floor(((e.offsetX - 5 ) / 5) / 29);
             var y = Math.floor(((e.offsetY - 5 ) / 5) / 29);
+            var nr = $(e.currentTarget).data("img").nr;
 
             console.log(x, y);
+            console.log(e);
 
             var allResultDetailsRows = $(".imgResultDetails");
             allResultDetailsRows.addClass("hidden");
-            $("#imgResult"+x+"-"+y).removeClass("hidden");
+            $("#imgResult"+nr+"_"+x+"-"+y).removeClass("hidden");
 
         });
     }
