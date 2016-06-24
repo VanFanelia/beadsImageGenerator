@@ -167,8 +167,6 @@ $("document").ready(function() {
         table.append('<tr><th>Id</th><th>Name</th><th>Color</th><th>#</th></tr>');
         var stats = countBeads(imgData, knownColors)
 
-        console.log(stats);
-
         $.each(knownColors, function(key, color){
             if(stats[color.intValue] == 0)
             {
@@ -244,7 +242,7 @@ $("document").ready(function() {
             modalBody.empty();
 
             // copy into modal window
-            targetResultDetails.clone().appendTo( modalBody);
+            targetResultDetails.clone(true, true).appendTo( modalBody);
             modalBody.find(".imgResultDetails").removeClass("hidden");
             // copy canvas
             var destCtx = $(modalBody.find('canvas'))[0].getContext('2d');
