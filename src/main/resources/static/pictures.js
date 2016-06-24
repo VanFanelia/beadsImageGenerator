@@ -147,15 +147,15 @@ $("document").ready(function() {
                 var colorHex = "#"+colorRGBA[0].toString(16) +
                     colorRGBA[1].toString(16) +
                     colorRGBA[2].toString(16);
-
+                context.lineWidth = 1 * sizeFactor * 1.5;
                 context.strokeStyle= colorHex;
                 context.stroke();
             }
         }
 
-        for(var xGrid=5-2; xGrid < imgWidth ; xGrid += 29*5*sizeFactor)
+        for(var xGrid=5-3; xGrid < imgWidth ; xGrid += 29*5*sizeFactor)
         {
-            for(var yGrid= 5-2; yGrid < imgHeight; yGrid += 29*5*sizeFactor)
+            for(var yGrid= 5-3; yGrid < imgHeight; yGrid += 29*5*sizeFactor)
             {
                 context.strokeStyle = "#000000";
                 context.strokeRect(xGrid,yGrid, 29*5*sizeFactor, 29*5*sizeFactor);
