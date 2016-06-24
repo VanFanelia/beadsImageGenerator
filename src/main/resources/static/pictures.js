@@ -37,7 +37,7 @@ $("document").ready(function() {
                 // create Result Images
                 $("#detailsTables").empty();
                 for(var j=0; j < data.images.length; j++){
-                    var canvas = createCanvasWithTable(j, data.images[j], data.knownColors, "imgResult");
+                    var canvas = createCanvasWithTable(j, data.images[j], data.knownColors, "imgResult", 1);
                     initPanelFullSizeView(canvas);
 
                     var xPanels = Math.ceil(data.images[j].width / 29);
@@ -64,7 +64,7 @@ $("document").ready(function() {
                                 "nr": nr,
                                 "pixelValues": pixelValues
                             };
-                            var canvas = createCanvasWithTable(nr, dataRect, data.knownColors, "imgResult imgResultDetails")
+                            var canvas = createCanvasWithTable(nr, dataRect, data.knownColors, "imgResult imgResultDetails", 2)
                         }
                     }
                 }
@@ -88,7 +88,7 @@ $("document").ready(function() {
     });
 
     /** helper functions **/
-    function createCanvasWithTable(j, imgData, knownColors, containerClass) {
+    function createCanvasWithTable(j, imgData, knownColors, containerClass, sizeFactor) {
         var tableContainer = $('<div id="imgResult' + j + '" class="'+containerClass+'">').addClass("col-lg-12 col-md-12 cool-xs-12").append(
             '<h2>Beads Pattern Details:</h2>'
         );
@@ -101,7 +101,7 @@ $("document").ready(function() {
         var tableContainerCanvas = tableContainerRow.append('<div class="col-lg-6 col-md-12 canvas">').find('div.canvas');
         var tableContainerStats = tableContainerRow.append('<div class="col-lg-6 col-md-12 stats">').find('div.stats');
 
-        var canvas = drawCanvasTo(tableContainerCanvas, imgData, j);
+        var canvas = drawCanvasTo(tableContainerCanvas, imgData, j, sizeFactor);
         $(canvas).data("img", imgData);
 
         printResultStatsTo(tableContainerStats, imgData, j, knownColors);
@@ -116,11 +116,15 @@ $("document").ready(function() {
         return '<a href="#" class="thumbnail" data-nr="'+nr+'"><img src="data:image/png;base64,'+imgBase64+'"></a>';
     }
 
-    function drawCanvasTo(nodeToDraw, imgData, nr)
+    function drawCanvasTo(nodeToDraw, imgData, nr, sizeFactor)
     {
+        if(sizeFactor == undefined){
+            sizeFactor = 1;
+        }
         var canvas = nodeToDraw.append('<canvas id="beadsTable'+nr+'" class="beadsCanvas"/>').find('canvas');
-        var imgHeight = imgData.height * 5 + 10;
-        var imgWidth = imgData.width * 5 + 10;
+        canvas.data("sizeFactor",sizeFactor);
+        var imgHeight = imgData.height * 5 * sizeFactor + 10;
+        var imgWidth = imgData.width * 5 * sizeFactor + 10;
         canvas.attr("width", imgWidth);
         canvas.attr("height", imgHeight);
         var context = canvas[0].getContext('2d');
@@ -138,7 +142,7 @@ $("document").ready(function() {
                 }
 
                 context.beginPath();
-                context.arc(x*5+5,y*5+5,2,0,2*Math.PI);
+                context.arc(x*5*sizeFactor+5,y*5*sizeFactor+5,2*sizeFactor,0,2*Math.PI);
 
                 var colorHex = "#"+colorRGBA[0].toString(16) +
                     colorRGBA[1].toString(16) +
@@ -149,12 +153,12 @@ $("document").ready(function() {
             }
         }
 
-        for(var xGrid=5-2; xGrid < imgWidth ; xGrid += 29*5)
+        for(var xGrid=5-2; xGrid < imgWidth ; xGrid += 29*5*sizeFactor)
         {
-            for(var yGrid= 5-2; yGrid < imgHeight; yGrid += 29*5)
+            for(var yGrid= 5-2; yGrid < imgHeight; yGrid += 29*5*sizeFactor)
             {
                 context.strokeStyle = "#000000";
-                context.strokeRect(xGrid,yGrid, 29*5, 29*5);
+                context.strokeRect(xGrid,yGrid, 29*5*sizeFactor, 29*5*sizeFactor);
             }
         }
 
@@ -195,13 +199,15 @@ $("document").ready(function() {
 
     function initHoverInfoBox(canvas){
         var infobox = $('#hoverInfoBox');
+        var sizeFactor = $(canvas).data("sizeFactor");
+
         $(canvas).on('mousemove', function(e){
             infobox.css({
                 left:  e.pageX,
                 top:   e.pageY
             });
-            var x = Math.floor((e.offsetX - 5 ) / 5);
-            var y = Math.floor((e.offsetY - 5 ) / 5);
+            var x = Math.floor((e.offsetX - 5 ) / (5 * sizeFactor));
+            var y = Math.floor((e.offsetY - 5 ) / (5 * sizeFactor));
             var imgData = canvas.data("img");
 
             if(x < 0 || y < 0 || x >= imgData.width || y >= imgData.height){
