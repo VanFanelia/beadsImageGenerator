@@ -236,12 +236,27 @@ $("document").ready(function() {
             var y = Math.floor(((e.offsetY - 5 ) / 5) / 29);
             var nr = $(e.currentTarget).data("img").nr;
 
-            console.log(x, y);
-            console.log(e);
-
             var allResultDetailsRows = $(".imgResultDetails");
-            allResultDetailsRows.addClass("hidden");
-            $("#imgResult"+nr+"_"+x+"-"+y).removeClass("hidden");
+            var targetResultDetails = $("#imgResult"+nr+"_"+x+"-"+y);
+            var modalBody = $("#showPatternDetails div.modal-body");
+
+            // clear modal
+            modalBody.empty();
+
+            // copy into modal window
+            targetResultDetails.clone().appendTo( modalBody);
+            modalBody.find(".imgResultDetails").removeClass("hidden");
+            // copy canvas
+            var destCtx = $(modalBody.find('canvas'))[0].getContext('2d');
+            destCtx.drawImage(targetResultDetails.find("canvas")[0], 0, 0);
+            // remove bootstrap foo classes
+            modalBody.find(".imgResult").removeClass("col-lg-12 col-md-12 cool-xs-12");
+
+            // show modal
+            $('#showPatternDetails').modal('show')
+
+            //allResultDetailsRows.addClass("hidden");
+            //targetResultDetails.removeClass("hidden");
 
         });
     }
