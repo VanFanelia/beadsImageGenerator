@@ -18,6 +18,12 @@ td {
 
 canvas {
     cursor: pointer;
+    margin: auto;
+    display:block;
+}
+
+table.beadsStats{
+    margin: auto;
 }
 
 #hoverInfoBox{

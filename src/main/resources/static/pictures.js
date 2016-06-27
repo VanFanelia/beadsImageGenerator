@@ -29,7 +29,7 @@ $("document").ready(function() {
                 for(var i=0; i<data.images.length; i++){
                     data.images[i].nr = i;
                     $("#results").append(
-                        $("<div>").addClass("col-lg-3 col-md-6 cool-xs-12").append(
+                        $("<div>").addClass("col-lg-3 col-md-3 col-xs-6").append(
                            createImage(data.images[i].imgBase64, i)
                         )).data("img",data.images[i]);
                 }
@@ -177,8 +177,10 @@ $("document").ready(function() {
                 // ignore transparent
                 return;
             }
-            var node = '<tr><td>' + color.id + '</td><td>' + color.name + '</td><td>#' +
-                color.red.toString(16) + color.green.toString(16) + color.blue.toString(16) + '</td><td>' +
+            var node = '<tr><td>' + color.id + '</td><td>' + color.name + '</td><td>'+
+                '<span style="border: 1px solid black; width: 60px; height: 18px; display: block; background-color: #' +
+                color.red.toString(16) + color.green.toString(16) + color.blue.toString(16) +
+                '"></span></td><td>' +
                 stats[color.intValue] + '</td></tr>';
             table.append(node);
         });
@@ -258,9 +260,6 @@ $("document").ready(function() {
 
             // show modal
             $('#showPatternDetails').modal('show')
-
-            //allResultDetailsRows.addClass("hidden");
-            //targetResultDetails.removeClass("hidden");
 
         });
     }
