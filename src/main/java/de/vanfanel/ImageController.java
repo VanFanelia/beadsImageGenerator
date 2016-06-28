@@ -8,6 +8,7 @@ import de.vanfanel.response.ImageResponse;
 import de.vanfanel.utils.BeadsColorUtils;
 import static de.vanfanel.utils.BeadsColorUtils.getIntFromColor;
 import static de.vanfanel.utils.BeadsColorUtils.getNearestColor;
+import de.vanfanel.utils.Color;
 import de.vanfanel.utils.Dimension;
 import de.vanfanel.utils.HTTPUtils;
 import de.vanfanel.utils.ImageResizeUtils;
@@ -41,17 +42,18 @@ public class ImageController {
     try {
       BufferedImage img = ImageIO.read(new URL(request.getLink()));
       ImageResponse response = new ImageResponse();
+      List<Color> allowedColors = BeadsColorUtils.getColorsOfColorTypes(request.getBeadGroups());
 
       List<Dimension> dimensionList = BeadsColorUtils.calculateDimensionToScale(new Dimension(img.getWidth(), img.getHeight()));
 
       dimensionList.parallelStream().map(
           d -> ImageResizeUtils.resizeImageWithThumbnailMaker(img,d.getWidth(),d.getHeight())
       ).forEachOrdered(
-          i -> response.getImages().add(getImageData(i))
+          i -> response.getImages().add(getBeadsImageDataInAvailableBeadsColors(i, allowedColors))
       );
 
       // Adds all know Colors
-      response.getKnownColors().addAll(BeadsColorUtils.HAMA_BEADS_COLORS);
+      response.getKnownColors().addAll(allowedColors);
 
       return response;
 
@@ -62,7 +64,7 @@ public class ImageController {
 
   }
 
-  private ImageData getImageData(BufferedImage img) {
+  private ImageData getBeadsImageDataInAvailableBeadsColors(BufferedImage img, List<Color> availableColors) {
     int height = img.getHeight();
     int width = img.getWidth();
 
@@ -70,15 +72,13 @@ public class ImageController {
     result.setHeight(height);
     result.setWidth(width);
 
-    System.out.println("height: "+height+"width" +width);
-
     int[] imagePixelValues = new int[width*height];
     BufferedImage base64Image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 
     IntStream.range(0, height*width).parallel().forEach(i -> {
       int x = (int) Math.floor(i / height);
       int y = i % height;
-      imagePixelValues[i] = getIntFromColor(getNearestColor(img.getRGB(x, y)));
+      imagePixelValues[i] = getIntFromColor(getNearestColor(img.getRGB(x, y), availableColors));
       base64Image.setRGB(x,y,imagePixelValues[i]);
     });
 

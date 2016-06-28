@@ -9,11 +9,15 @@ $("document").ready(function() {
     $("#BNTtoHamaColor").click(function(){
 
         var linkVal = link.val();
+        var selectedBeadGroups = [];
+        $("#colorGroups").find('option:selected').each(function(){
+            selectedBeadGroups.push($(this).val());
+        });
 
         $.ajax({
             url:"/process",
             type:"POST",
-            data: JSON.stringify({ "link": linkVal }),
+            data: JSON.stringify({ "link": linkVal, "beadGroups": selectedBeadGroups }),
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             success: function(data){

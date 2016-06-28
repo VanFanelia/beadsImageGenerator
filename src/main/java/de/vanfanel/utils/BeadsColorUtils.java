@@ -1,5 +1,7 @@
 package de.vanfanel.utils;
 
+import static de.vanfanel.utils.ColorType.HAMA_METAL;
+import static de.vanfanel.utils.ColorType.HAMA_PASTEL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class BeadsColorUtils {
 
-  public static final List<HAMAColor> HAMA_BEADS_COLORS = new ArrayList<>();
+  public static final List<Color> HAMA_BEADS_COLORS = new ArrayList<>();
   public static final HAMAColor HAMA_TRANSPARENT = new HAMAColor("T","TRANSPARENT",0,0,0,0);
 
   public static final Dimension MAX_SIZE = new Dimension(5*29,5*29);
@@ -39,17 +41,24 @@ public class BeadsColorUtils {
     HAMA_BEADS_COLORS.add(new HAMAColor("H30", "BURGUNDY", 115, 75, 85, 255));
     HAMA_BEADS_COLORS.add(new HAMAColor("H31", "TURQUOISE", 105, 160, 175, 255));
     HAMA_BEADS_COLORS.add(new HAMAColor("H32", "FUCHSIA", 255, 95, 200, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H43", "PASTEL YELLOW", 245, 240, 125, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H44", "PASTEL RED", 255, 120, 140, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H45", "PASTEL PURPLE", 165, 140, 205, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H46", "PASTEL BLUE", 80, 170, 225, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H47", "PASTEL GREEN", 150, 230, 160, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H48", "PASTEL PINK", 230, 135, 200, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H43", "PASTEL YELLOW", HAMA_PASTEL, 245, 240, 125, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H44", "PASTEL RED", HAMA_PASTEL,  255, 120, 140, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H45", "PASTEL PURPLE", HAMA_PASTEL, 165, 140, 205, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H46", "PASTEL BLUE", HAMA_PASTEL, 80, 170, 225, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H47", "PASTEL GREEN", HAMA_PASTEL, 150, 230, 160, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H48", "PASTEL PINK", HAMA_PASTEL, 230, 135, 200, 255));
     HAMA_BEADS_COLORS.add(new HAMAColor("H49", "AZURE", 73, 152, 188, 255));
     HAMA_BEADS_COLORS.add(new HAMAColor("H60", "TEDDY BEAR", 240, 175, 95, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H61", "GOLD", 170, 135, 75, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H62", "SILVER", 175, 180, 190, 255));
-    HAMA_BEADS_COLORS.add(new HAMAColor("H63", "BRONZE", 170, 160, 105, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H61", "GOLD", HAMA_METAL, 170, 135, 75, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H62", "SILVER", HAMA_METAL, 175, 180, 190, 255));
+    HAMA_BEADS_COLORS.add(new HAMAColor("H63", "BRONZE", HAMA_METAL, 170, 160, 105, 255));
+  }
+
+  public static List<Color> getColorsOfColorTypes(List<ColorType> usedColorTypes)
+  {
+    return HAMA_BEADS_COLORS.parallelStream().filter(
+          c -> usedColorTypes.contains(c.getType()))
+        .collect(Collectors.toList());
   }
 
   public static int getIntFromColor(Color color)
@@ -101,7 +110,7 @@ public class BeadsColorUtils {
 
   }
 
-  public static HAMAColor getNearestColor(int rgbaColor)
+  public static Color getNearestColor(int rgbaColor, List<Color> availableColors)
   {
     Color toCheck = getColorFromInt(rgbaColor);
 
@@ -109,8 +118,8 @@ public class BeadsColorUtils {
       return HAMA_TRANSPARENT;
     }
 
-    Map<HAMAColor, Double> distances = HAMA_BEADS_COLORS.parallelStream().collect(Collectors.toMap(
-      HAMAColor::getThisObj , c ->  getDistanceBetween2Colors(c, toCheck)
+    Map<Color, Double> distances = availableColors.parallelStream().collect(Collectors.toMap(
+      Color::getThisObj , c ->  getDistanceBetween2Colors(c, toCheck)
     ));
 
     return distances.entrySet().parallelStream()
