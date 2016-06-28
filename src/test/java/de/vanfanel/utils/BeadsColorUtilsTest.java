@@ -93,14 +93,14 @@ public class BeadsColorUtilsTest {
 
   @Test
   public void testCalculateDimensionToScaleReturnsListWithMultiDimensionOnDimensionMoreThenMaxSize() throws Exception {
-    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(5*29+1,5*29+1)); // 145+1
+    List<Dimension> targetDimensions = BeadsColorUtils.calculateDimensionToScale(new Dimension(6*29+1,6*29+1)); // 174+1
     assertThat(targetDimensions.size(), Matchers.equalTo(3));
-    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(73));
-    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(73));
-    assertThat(targetDimensions.get(1).getWidth(), Matchers.equalTo(36));
-    assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(36));
-    assertThat(targetDimensions.get(2).getWidth(), Matchers.equalTo(18));
-    assertThat(targetDimensions.get(2).getHeight(), Matchers.equalTo(18));
+    assertThat(targetDimensions.get(0).getWidth(), Matchers.equalTo(87));
+    assertThat(targetDimensions.get(0).getHeight(), Matchers.equalTo(87));
+    assertThat(targetDimensions.get(1).getWidth(), Matchers.equalTo(43));
+    assertThat(targetDimensions.get(1).getHeight(), Matchers.equalTo(43));
+    assertThat(targetDimensions.get(2).getWidth(), Matchers.equalTo(21));
+    assertThat(targetDimensions.get(2).getHeight(), Matchers.equalTo(21));
   }
 
   @Test

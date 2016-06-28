@@ -12,7 +12,7 @@ public class BeadsColorUtils {
   public static final List<Color> HAMA_BEADS_COLORS = new ArrayList<>();
   public static final HAMAColor HAMA_TRANSPARENT = new HAMAColor("T","TRANSPARENT",0,0,0,0);
 
-  public static final Dimension MAX_SIZE = new Dimension(5*29,5*29);
+  public static final Dimension MAX_SIZE = new Dimension(6*29,6*29);
   public static final Dimension MIN_RESIZE_VALUE = new Dimension(29,29);
 
   static{
